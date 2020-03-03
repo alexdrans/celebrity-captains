@@ -5,5 +5,10 @@ export type Captain = {
 
 export type Ship = {
   name: string;
+};
+
+export type Arrival = {
+  ship: Ship;
   captain: Captain;
+  arrivalTime: Date;
 };

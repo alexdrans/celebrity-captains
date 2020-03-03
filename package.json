@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "node dist/index.js",
-    "build": "tsc",
+    "build": "rimraf && tsc",
     "watch": "tsc -w",
     "eslint": "eslint src/**/*.ts"
   },
