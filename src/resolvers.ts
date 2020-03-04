@@ -1,21 +1,24 @@
-import { Captain, Ship, Arrival } from '../types';
+import { Captain, Ship, Arrival } from './types/generated';
+import { getCaptainsDb } from './db';
 
 const captains: Captain[] = [
   {
+    id: '123',
     name: 'Bob',
-    age: 63,
   },
   {
+    id: '456',
     name: 'Charles',
-    age: 58,
   },
 ];
 
 const ships: Ship[] = [
   {
-    name: 'Wonderful boat',
+    id: '123',
+    name: 'Big boat',
   },
   {
+    id: '456',
     name: 'Pacific Fantastic',
   },
 ];
@@ -36,7 +39,7 @@ const arrivals: Arrival[] = [
 export const resolvers = {
   Query: {
     ships: (): Ship[] => ships,
-    captains: (): Captain[] => captains,
+    captains: getCaptainsDb,
     arrivals: (): Arrival[] => arrivals,
   },
 };

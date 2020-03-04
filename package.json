@@ -8,22 +8,35 @@
   "license": "MIT",
   "dependencies": {
     "apollo-server": "^2.11.0",
-    "graphql": "^14.6.0"
+    "graphql": "^14.6.0",
+    "pg": "^7.18.2"
   },
   "scripts": {
     "start": "node dist/index.js",
-    "build": "rimraf && tsc",
-    "watch": "tsc -w",
-    "eslint": "eslint src/**/*.ts"
+    "dev": "nodemon dist/index.js",
+    "build": "rimraf dist && tsc",
+    "watch": "rimraf dist && tsc -w",
+    "codegen": "graphql-codegen",
+    "migrate": "node-pg-migrate",
+    "eslint": "eslint src/**/*.ts",
+    "up": "docker-compose up --build",
+    "down": "docker-compose down",
+    "dcrun": "docker-compose run"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^1.12.2",
+    "@graphql-codegen/typescript": "^1.12.2",
     "@types/express": "^4.17.3",
+    "@types/pg": "^7.14.1",
     "@typescript-eslint/eslint-plugin": "^2.22.0",
     "@typescript-eslint/parser": "^2.22.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
     "husky": "^4.2.3",
+    "jest": "^25.1.0",
+    "node-pg-migrate": "^4.2.2",
+    "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
     "pretty-quick": "^2.0.1",
     "rimraf": "^3.0.2",

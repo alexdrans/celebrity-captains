@@ -1,6 +1,7 @@
 import { gql } from 'apollo-server';
+import { DocumentNode } from 'graphql';
 
-export const typeDefs = gql`
+export const typeDefs: DocumentNode = gql`
   scalar Date
 
   type Captain {
@@ -11,7 +12,6 @@ export const typeDefs = gql`
   type Ship {
     id: ID!
     name: String
-    captain: Captain
   }
 
   type Port {

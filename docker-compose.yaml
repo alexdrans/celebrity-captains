@@ -1,7 +1,22 @@
 version: '3'
 services:
-  dynamodb:
-    image: amazon/dynamodb-local:latest
+  graphql:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.development
+    environment:
+      DATABASE_URL: 'postgres://postgres:password123@postgres:5432/postgres'
+      PGPASSWORD: 'password123'
     ports:
-      - '8000:8000'
-    command: ['-jar', 'DynamoDBLocal.jar', '-sharedDb', '-inMemory']
+      - '4000:4000'
+    volumes:
+      - ./:/usr/src/app
+      - ./node_modules:/usr/src/app/node_modules
+      - ./dist:/usr/src/app/dist
+    command: yarn dev
+  postgres:
+    image: postgres:11
+    environment:
+      POSTGRES_PASSWORD: password123
+    ports:
+      - '5432:5432'

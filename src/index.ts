@@ -5,6 +5,8 @@ import { typeDefs } from './typeDefs';
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  introspection: true,
+  playground: true,
 });
 
 server.listen().then(({ url }: { url: string }) => {
