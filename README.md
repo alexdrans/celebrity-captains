@@ -1,6 +1,8 @@
 # celebrity-captains
 
-Thanks for the fun task!
+The year is 2057 and ship captains are now considered celebrities throughout the world.
+
+[Live demo](https://celebrity-captains.herokuapp.com/)
 
 ## How to run
 
