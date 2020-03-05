@@ -1,1 +1,1 @@
-export * from './celebrityCaptains';
+export * from './arrivals';

@@ -12,10 +12,11 @@ export type Scalars = {
 
 export type Arrival = {
   __typename?: 'Arrival';
-  ship?: Maybe<Ship>;
-  captain?: Maybe<Captain>;
-  port?: Maybe<Port>;
-  arrivalTime?: Maybe<Scalars['Date']>;
+  id: Scalars['ID'];
+  vesselName: Scalars['String'];
+  captainName: Scalars['String'];
+  port: Scalars['String'];
+  arrivedAt: Scalars['Date'];
 };
 
 export enum CacheControlScope {
@@ -23,27 +24,35 @@ export enum CacheControlScope {
   Private = 'PRIVATE',
 }
 
-export type Captain = {
-  __typename?: 'Captain';
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
+export type CreateArrivalInput = {
+  captainName: Scalars['String'];
+  vesselName: Scalars['String'];
+  port: Scalars['String'];
+  arrivedAt: Scalars['Date'];
 };
 
-export type Port = {
-  __typename?: 'Port';
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
+export type Mutation = {
+  __typename?: 'Mutation';
+  createArrival?: Maybe<Arrival>;
+};
+
+export type MutationCreateArrivalArgs = {
+  input: CreateArrivalInput;
 };
 
 export type Query = {
   __typename?: 'Query';
-  ships?: Maybe<Array<Maybe<Ship>>>;
-  captains?: Maybe<Array<Maybe<Captain>>>;
   arrivals?: Maybe<Array<Maybe<Arrival>>>;
+  getArrivals?: Maybe<Array<Maybe<Arrival>>>;
 };
 
-export type Ship = {
-  __typename?: 'Ship';
-  id: Scalars['ID'];
+export type QueryGetArrivalsArgs = {
+  id?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
+  sort?: Maybe<Sort>;
 };
+
+export enum Sort {
+  Asc = 'ASC',
+  Desc = 'DESC',
+}

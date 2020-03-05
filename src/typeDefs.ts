@@ -4,31 +4,32 @@ import { DocumentNode } from 'graphql';
 export const typeDefs: DocumentNode = gql`
   scalar Date
 
-  type Captain {
-    id: ID!
-    name: String
-  }
-
-  type Ship {
-    id: ID!
-    name: String
-  }
-
-  type Port {
-    id: ID!
-    name: String
-  }
-
   type Arrival {
-    ship: Ship
-    captain: Captain
-    port: Port
-    arrivalTime: Date
+    id: ID!
+    vesselName: String!
+    captainName: String!
+    port: String!
+    arrivedAt: Date!
+  }
+
+  enum Sort {
+    ASC
+    DESC
   }
 
   type Query {
-    ships: [Ship]
-    captains: [Captain]
     arrivals: [Arrival]
+    getArrivals(id: ID, name: String, sort: Sort): [Arrival]
+  }
+
+  input createArrivalInput {
+    captainName: String!
+    vesselName: String!
+    port: String!
+    arrivedAt: Date!
+  }
+
+  type Mutation {
+    createArrival(input: createArrivalInput!): Arrival
   }
 `;

@@ -1,56 +1,38 @@
+/* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable camelcase */
 
 exports.shorthands = undefined;
 
-const timestamps = pgm => ({
-  updatedAt: {
-    type: 'timestamp',
-    notNull: true,
-    default: pgm.func('current_timestamp'),
-  },
-  createdAt: {
-    type: 'timestamp',
-    notNull: true,
-    default: pgm.func('current_timestamp'),
-  },
-});
-
 exports.up = pgm => {
-  pgm.createTable('captains', {
+  pgm.createTable('arrivals', {
     id: 'id',
-    ...timestamps(pgm),
-  });
-  pgm.createTable('vessels', {
-    id: 'id',
-    name: { type: 'varchar(1024)', notNull: true },
-    ...timestamps(pgm),
-  });
-  pgm.createTable('ports', {
-    id: 'id',
-    name: { type: 'varchar(1024)', notNull: true },
-    ...timestamps(pgm),
-  });
-  pgm.createTable('visits', {
-    id: 'id',
-    captainId: {
-      type: 'integer',
+    captain_name: {
+      type: 'varchar',
       notNull: true,
-      references: '"captains"',
-      onDelete: 'cascade',
     },
-    vesselId: {
-      type: 'integer',
+    vessel_name: {
+      type: 'varchar',
       notNull: true,
-      references: '"vessels"',
-      onDelete: 'cascade',
     },
-    portId: {
-      type: 'integer',
+    port: {
+      type: 'varchar',
       notNull: true,
-      references: '"ports"',
-      onDelete: 'cascade',
     },
-    ...timestamps(pgm),
+    arrived_at: {
+      type: 'timestamp',
+      notNull: true,
+      default: pgm.func('current_timestamp'),
+    },
+    updated_at: {
+      type: 'timestamp',
+      notNull: true,
+      default: pgm.func('current_timestamp'),
+    },
+    created_at: {
+      type: 'timestamp',
+      notNull: true,
+      default: pgm.func('current_timestamp'),
+    },
   });
 };
 

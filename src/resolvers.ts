@@ -1,45 +1,49 @@
-import { Captain, Ship, Arrival } from './types/generated';
-import { getCaptainsDb } from './db';
+import {
+  Arrival,
+  MutationCreateArrivalArgs,
+  QueryGetArrivalsArgs,
+} from './types/generated';
+import { getArrivalsDb, insertArrivalDb } from './db';
+import { logger } from './lib/logger';
+import camelcaseKeys from 'camelcase-keys';
+import { Context } from './types';
 
-const captains: Captain[] = [
-  {
-    id: '123',
-    name: 'Bob',
-  },
-  {
-    id: '456',
-    name: 'Charles',
-  },
-];
+const getArrivals = async (
+  _parent: any,
+  args: QueryGetArrivalsArgs,
+  context: Context
+): Promise<Arrival[]> => {
+  logger.debug('Invoking getVisits');
 
-const ships: Ship[] = [
-  {
-    id: '123',
-    name: 'Big boat',
-  },
-  {
-    id: '456',
-    name: 'Pacific Fantastic',
-  },
-];
+  const res = await getArrivalsDb(args, context);
 
-const arrivals: Arrival[] = [
-  {
-    ship: ships[0],
-    captain: captains[0],
-    arrivalTime: new Date(),
-  },
-  {
-    ship: ships[1],
-    captain: captains[1],
-    arrivalTime: new Date(),
-  },
-];
+  logger.info('Query OK.');
+  logger.debug('Result:', res);
+
+  return camelcaseKeys(res) as Arrival[];
+};
+
+const createArrival = async (
+  _parent: any,
+  args: MutationCreateArrivalArgs,
+  context: Context
+): Promise<Arrival> => {
+  logger.debug('Invoking createArrival');
+
+  logger.debug('Input args:', args);
+  const res = await insertArrivalDb(args.input, context);
+
+  logger.info('Query OK');
+  logger.debug('Result', res);
+
+  return camelcaseKeys(res) as Arrival;
+};
 
 export const resolvers = {
   Query: {
-    ships: (): Ship[] => ships,
-    captains: getCaptainsDb,
-    arrivals: (): Arrival[] => arrivals,
+    getArrivals,
+  },
+  Mutation: {
+    createArrival,
   },
 };
