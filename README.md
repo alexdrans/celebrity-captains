@@ -20,7 +20,31 @@ To run the queries, start the application and head to `http://localhost:4000`. P
 
 ```
 query getArrivals {
-  getArrivals(sort: DESC, pagination: { first: 2 }) {
+  getArrivals(sort: DESC, pagination: { first: 3 }) {
+    edges {
+      node {
+        id
+        captainName
+        vesselName
+        port
+        arrivedAt
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+query getArrivals {
+  getArrivals(
+    sort: DESC
+    pagination: {
+      first: 3
+      after: "VGh1IE1hciAwNSAyMDIwIDE1OjI0OjM4IEdNVCswMDAwIChDb29yZGluYXRlZCBVbml2ZXJzYWwgVGltZSk="
+    }
+  ) {
     edges {
       node {
         id
