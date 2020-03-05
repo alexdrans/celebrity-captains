@@ -8,6 +8,7 @@ services:
       DATABASE_URL: 'postgres://postgres:password123@postgres:5432/postgres'
       PGPASSWORD: 'password123'
       NODE_ENV: 'development'
+      PORT: 4000
     ports:
       - '4000:4000'
     volumes:
