@@ -4,10 +4,15 @@ import {
   CreateArrivalInput,
   QueryGetArrivalsArgs,
   Sort,
+  ArrivalConnection,
+  ArrivalEdge,
 } from '../types/generated';
 import escape from 'pg-escape';
+import camelcaseKeys from 'camelcase-keys';
+import moment from 'moment';
 import { QueryResult } from 'pg';
 import { Context } from '../types';
+import { toCursor, fromCursor } from '../lib/cursors';
 
 export const insertArrivalDb = async (
   args: CreateArrivalInput,
@@ -24,13 +29,14 @@ export const insertArrivalDb = async (
   context.logger.debug('Executing', query);
 
   const res = await connection.query(query);
-  return res.rows[0];
+  const result = camelcaseKeys(res.rows[0]);
+  return (result as unknown) as Arrival;
 };
 
 export const getArrivalsDb = async (
-  { id, name, sort = Sort.Desc }: QueryGetArrivalsArgs,
+  { id, name, pagination, sort = Sort.Desc }: QueryGetArrivalsArgs,
   context: Context
-): Promise<Arrival[]> => {
+): Promise<ArrivalConnection> => {
   let query = 'SELECT * FROM arrivals';
 
   if (id && name) {
@@ -41,16 +47,47 @@ export const getArrivalsDb = async (
     query += escape(' WHERE captain_name = %L', name);
   }
 
+  context.logger.debug('Pagination:', pagination);
+  if (pagination.after) {
+    const arrival = moment(fromCursor(pagination.after)).format();
+    const direction = sort == Sort.Desc ? '<' : '>';
+    query +=
+      id || name
+        ? escape('AND WHERE arrived_at %s %L', direction, arrival)
+        : escape(' WHERE arrived_at %s %L', direction, arrival);
+  }
+
   if (['ASC', 'DESC'].includes(sort as string)) {
     query += escape(' ORDER BY arrived_at %I', sort);
+  }
+
+  if (pagination.first) {
+    query += escape(' LIMIT %s', pagination.first + 1);
   }
 
   context.logger.debug('Executing', query);
 
   const res = (await connection.query(query)) as QueryResult<Arrival>;
+  const results = camelcaseKeys(res.rows, { deep: true }) as Arrival[];
 
-  if (res.rows) {
-    return res.rows;
+  const hasNextPage = results.length > pagination?.first;
+  const nodes = hasNextPage ? results.slice(0, 1) : results;
+
+  const edges = nodes.map(node => ({ node }));
+
+  if (!edges.length) {
+    return {
+      edges: [],
+      pageInfo: { hasNextPage: false, endCursor: null },
+    };
   }
-  return [];
+
+  const endCursor = toCursor(
+    new Date(nodes[nodes.length - 1].arrivedAt).toString()
+  );
+
+  return {
+    edges,
+    pageInfo: { hasNextPage, endCursor },
+  } as ArrivalConnection;
 };

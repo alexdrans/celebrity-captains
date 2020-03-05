@@ -6,6 +6,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Cursor: any;
   Date: any;
   Upload: any;
 };
@@ -17,6 +18,18 @@ export type Arrival = {
   captainName: Scalars['String'];
   port: Scalars['String'];
   arrivedAt: Scalars['Date'];
+};
+
+export type ArrivalConnection = {
+  __typename?: 'ArrivalConnection';
+  edges?: Maybe<Array<Maybe<ArrivalEdge>>>;
+  pageInfo: PageInfo;
+};
+
+export type ArrivalEdge = {
+  __typename?: 'ArrivalEdge';
+  node?: Maybe<Arrival>;
+  cursor?: Maybe<Scalars['Cursor']>;
 };
 
 export enum CacheControlScope {
@@ -40,15 +53,26 @@ export type MutationCreateArrivalArgs = {
   input: CreateArrivalInput;
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  hasNextPage?: Maybe<Scalars['Boolean']>;
+  endCursor?: Maybe<Scalars['Cursor']>;
+};
+
+export type PaginationInput = {
+  first: Scalars['Int'];
+  after?: Maybe<Scalars['Cursor']>;
+};
+
 export type Query = {
   __typename?: 'Query';
-  arrivals?: Maybe<Array<Maybe<Arrival>>>;
-  getArrivals?: Maybe<Array<Maybe<Arrival>>>;
+  getArrivals?: Maybe<ArrivalConnection>;
 };
 
 export type QueryGetArrivalsArgs = {
   id?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
+  pagination: PaginationInput;
   sort?: Maybe<Sort>;
 };
 

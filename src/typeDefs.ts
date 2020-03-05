@@ -3,6 +3,7 @@ import { DocumentNode } from 'graphql';
 
 export const typeDefs: DocumentNode = gql`
   scalar Date
+  scalar Cursor
 
   type Arrival {
     id: ID!
@@ -17,12 +18,36 @@ export const typeDefs: DocumentNode = gql`
     DESC
   }
 
-  type Query {
-    arrivals: [Arrival]
-    getArrivals(id: ID, name: String, sort: Sort): [Arrival]
+  type ArrivalEdge {
+    node: Arrival
+    cursor: Cursor
   }
 
-  input createArrivalInput {
+  type PageInfo {
+    hasNextPage: Boolean
+    endCursor: Cursor
+  }
+
+  type ArrivalConnection {
+    edges: [ArrivalEdge]
+    pageInfo: PageInfo!
+  }
+
+  type Query {
+    getArrivals(
+      id: ID
+      name: String
+      pagination: PaginationInput!
+      sort: Sort
+    ): ArrivalConnection
+  }
+
+  input PaginationInput {
+    first: Int!
+    after: Cursor
+  }
+
+  input CreateArrivalInput {
     captainName: String!
     vesselName: String!
     port: String!
@@ -30,6 +55,6 @@ export const typeDefs: DocumentNode = gql`
   }
 
   type Mutation {
-    createArrival(input: createArrivalInput!): Arrival
+    createArrival(input: CreateArrivalInput!): Arrival
   }
 `;

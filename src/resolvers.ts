@@ -2,25 +2,27 @@ import {
   Arrival,
   MutationCreateArrivalArgs,
   QueryGetArrivalsArgs,
+  ArrivalConnection,
 } from './types/generated';
 import { getArrivalsDb, insertArrivalDb } from './db';
 import { logger } from './lib/logger';
-import camelcaseKeys from 'camelcase-keys';
 import { Context } from './types';
+import camelcaseKeys = require('camelcase-keys');
 
 const getArrivals = async (
   _parent: any,
   args: QueryGetArrivalsArgs,
   context: Context
-): Promise<Arrival[]> => {
+): Promise<ArrivalConnection> => {
   logger.debug('Invoking getVisits');
 
+  logger.debug('Input args:', args);
   const res = await getArrivalsDb(args, context);
 
   logger.info('Query OK.');
-  logger.debug('Result:', res);
+  logger.debug('Result:', JSON.stringify(res, null, 2));
 
-  return camelcaseKeys(res) as Arrival[];
+  return res;
 };
 
 const createArrival = async (
@@ -34,9 +36,9 @@ const createArrival = async (
   const res = await insertArrivalDb(args.input, context);
 
   logger.info('Query OK');
-  logger.debug('Result', res);
+  logger.debug('Result', JSON.stringify(res, null, 2));
 
-  return camelcaseKeys(res) as Arrival;
+  return res;
 };
 
 export const resolvers = {
