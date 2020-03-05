@@ -3,7 +3,7 @@
 
 exports.shorthands = undefined;
 
-exports.up = pgm => {
+exports.up = pgm =>
   pgm.createTable('arrivals', {
     id: 'id',
     captain_name: {
@@ -23,6 +23,5 @@ exports.up = pgm => {
       notNull: true,
     },
   });
-};
 
-exports.down = pgm => {};
+exports.down = pgm => pgm.dropTable('arrivals', { ifExists: true });

@@ -36,7 +36,7 @@ export const typeDefs: DocumentNode = gql`
   type Query {
     getArrivals(
       id: ID
-      name: String
+      captainName: String
       pagination: PaginationInput!
       sort: Sort
     ): ArrivalConnection

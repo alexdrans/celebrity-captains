@@ -1,4 +1,3 @@
-import { connection } from './connection';
 import {
   Arrival,
   CreateArrivalInput,
@@ -28,23 +27,26 @@ export const insertArrivalDb = async (
 
   context.logger.debug('Executing', query);
 
-  const res = await connection.query(query);
+  const res = await context.connection.query(query);
   const result = camelcaseKeys(res.rows[0]);
   return (result as unknown) as Arrival;
 };
 
 export const getArrivalsDb = async (
-  { id, name, pagination, sort = Sort.Desc }: QueryGetArrivalsArgs,
+  { id, captainName, pagination, sort = Sort.Desc }: QueryGetArrivalsArgs,
   context: Context
 ): Promise<ArrivalConnection> => {
   let query = 'SELECT * FROM arrivals';
+  if (pagination.first > 100) {
+    pagination.first = 100;
+  }
 
-  if (id && name) {
-    query += escape(' WHERE id = %L AND captain_name = %L', id, name);
+  if (id && captainName) {
+    query += escape(' WHERE id = %L AND captain_name = %L', id, captainName);
   } else if (id) {
     query += escape(' WHERE id = %L', id);
-  } else if (name) {
-    query += escape(' WHERE captain_name = %L', name);
+  } else if (captainName) {
+    query += escape(' WHERE captain_name = %L', captainName);
   }
 
   context.logger.debug('Pagination:', pagination);
@@ -52,12 +54,12 @@ export const getArrivalsDb = async (
     const arrival = moment(fromCursor(pagination.after)).format();
     const direction = sort == Sort.Desc ? '<' : '>';
     query +=
-      id || name
-        ? escape('AND WHERE arrived_at %s %L', direction, arrival)
+      id || captainName
+        ? escape(' AND arrived_at %s %L', direction, arrival)
         : escape(' WHERE arrived_at %s %L', direction, arrival);
   }
 
-  if (['ASC', 'DESC'].includes(sort as string)) {
+  if (sort && [Sort.Desc, Sort.Asc].includes(sort)) {
     query += escape(' ORDER BY arrived_at %I', sort);
   }
 
@@ -67,13 +69,13 @@ export const getArrivalsDb = async (
 
   context.logger.debug('Executing', query);
 
-  const res = (await connection.query(query)) as QueryResult<Arrival>;
-  const results = camelcaseKeys(res.rows, { deep: true }) as Arrival[];
+  const res = (await context.connection.query(query)) as QueryResult<Arrival>;
+  const results = res.rows;
 
   const hasNextPage = results.length > pagination?.first;
   const nodes = hasNextPage ? results.slice(0, 1) : results;
 
-  const edges = nodes.map(node => ({ node }));
+  const edges: ArrivalEdge[] = nodes.map(node => ({ node }));
 
   if (!edges.length) {
     return {
@@ -87,7 +89,7 @@ export const getArrivalsDb = async (
   );
 
   return {
-    edges,
+    edges: camelcaseKeys(edges, { deep: true }),
     pageInfo: { hasNextPage, endCursor },
   } as ArrivalConnection;
 };

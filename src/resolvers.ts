@@ -7,7 +7,6 @@ import {
 import { getArrivalsDb, insertArrivalDb } from './db';
 import { logger } from './lib/logger';
 import { Context } from './types';
-import camelcaseKeys = require('camelcase-keys');
 
 const getArrivals = async (
   _parent: any,

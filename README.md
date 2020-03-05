@@ -12,7 +12,7 @@ You can use `yarn dev` outside of Docker to watch the server in development, and
 
 ## Type generator
 
-Types are generated from the GraphQL schema to be used in resolvers and data access. To generate the types from the schema, run `yarn codegen`
+Types are generated from the GraphQL schema and used in resolvers and data access. To generate the types from the schema, run `yarn codegen`
 
 ## Example queries
 

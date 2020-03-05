@@ -58,5 +58,6 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
     "outDir": "./dist",
     "rootDir": "./src"
-  }
+  },
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

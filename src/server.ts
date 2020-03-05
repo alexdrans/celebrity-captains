@@ -1,6 +1,7 @@
 import { ApolloServer } from 'apollo-server';
+import { connection } from './db/connection';
 import { resolvers } from './resolvers';
-import { typeDefs } from './typeDefs';
+import { typeDefs } from './schema';
 import { logger } from './lib/logger';
 
 export const server = new ApolloServer({
@@ -10,5 +11,6 @@ export const server = new ApolloServer({
   playground: true,
   context: {
     logger,
+    connection,
   },
 });

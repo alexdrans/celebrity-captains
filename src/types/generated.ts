@@ -71,7 +71,7 @@ export type Query = {
 
 export type QueryGetArrivalsArgs = {
   id?: Maybe<Scalars['ID']>;
-  name?: Maybe<Scalars['String']>;
+  captainName?: Maybe<Scalars['String']>;
   pagination: PaginationInput;
   sort?: Maybe<Sort>;
 };
