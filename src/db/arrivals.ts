@@ -13,21 +13,18 @@ export const insertArrivalDb = async (
   args: CreateArrivalInput,
   context: Context
 ): Promise<Arrival> => {
-  try {
-    const res = await connection.query(
-      escape(
-        'INSERT INTO arrivals (captain_name, vessel_name, port, arrived_at) VALUES (%L, %L, %L, %L) RETURNING *',
-        args.captainName,
-        args.vesselName,
-        args.port,
-        args.arrivedAt
-      )
-    );
-    return res.rows[0];
-  } catch (err) {
-    context.logger.error(err);
-    throw err;
-  }
+  const query = escape(
+    'INSERT INTO arrivals (captain_name, vessel_name, port, arrived_at) VALUES (%L, %L, %L, %L) RETURNING *',
+    args.captainName,
+    args.vesselName,
+    args.port,
+    args.arrivedAt
+  );
+
+  context.logger.debug('Executing', query);
+
+  const res = await connection.query(query);
+  return res.rows[0];
 };
 
 export const getArrivalsDb = async (
