@@ -16,6 +16,10 @@ You can use `yarn dev` outside of Docker to watch the server in development, and
 
 Types are generated from the GraphQL schema and used in resolvers and data access. To generate the types from the schema, run `yarn codegen`
 
+## Tests
+
+`yarn test`
+
 ## Example queries
 
 To run the queries, start the application and head to `http://localhost:4000`. Paste the following into the editor;
