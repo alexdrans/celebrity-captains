@@ -80,3 +80,9 @@ mutation createArrival {
   }
 }
 ```
+
+## Product
+
+This product implements the celebrity captains task and is made up of an Apollo GraphQL Server and Postgres database.
+
+There are two capabilities; the creation and retrieval of arrivals at ports, by captains and their vessels.
